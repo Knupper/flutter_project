@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_project/screens/add_customer_form.dart';
-import 'package:flutter_project/widgets/customer_list_item.dart';
-import 'package:flutter_project/entities/customer.dart';
+import 'package:flutter_project/entities/rma.dart';
+import 'package:flutter_project/screens/add_rma_form.dart';
+import 'package:flutter_project/widgets/rma_list_item.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,7 +43,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final customerList = [];
+  final rmaList = [
+    Rma(
+      status: RmaStatus.inProcress,
+      customerId: 23,
+      orderId: 23,
+      description: 'Bin hingefallen :(',
+      createdAt: DateTime.now().subtract(const Duration(days: 1)).toUtc(),
+      id: 2,
+    ),
+    Rma(
+      status: RmaStatus.payed,
+      customerId: 42,
+      orderId: 42,
+      description: 'Postbote ist ausgerutscht',
+      createdAt: DateTime.now().subtract(const Duration(days: 5)).toUtc(),
+      id: 3,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -53,27 +69,30 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: ListView.separated(
-        itemCount: customerList.length,
+        itemCount: rmaList.length,
         separatorBuilder: (context, index) => const SizedBox(height: 8),
-        itemBuilder: (context, index) => CustomerListItem(
-          customer: customerList[index],
+        itemBuilder: (context, index) => RmaListItem(
+          rma: rmaList[index],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final customer = await Navigator.push<Customer>(
+          final rma = await Navigator.push<Rma>(
             context,
             MaterialPageRoute(
-              builder: (context) => const AddCustomerForm(),
+              builder: (context) => const AddRmaForm(),
             ),
           );
 
-          if (customer == null) {
+          if (rma == null) {
             return;
           }
 
           setState(() {
-            customerList.add(customer);
+            rmaList.add(rma);
+            rmaList.sort(
+              (a, b) => a.createdAt.isAfter(b.createdAt) ? -1 : 1,
+            );
           });
         },
         tooltip: 'Add new customer',
