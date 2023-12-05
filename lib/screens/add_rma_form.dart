@@ -12,6 +12,9 @@ class AddRmaForm extends StatefulWidget {
 }
 
 class _AddRmaFormState extends State<AddRmaForm> {
+  bool _checkBoxChecked = false;
+  int _selectedDropdownItem = 2;
+
   final _formKey = GlobalKey<FormState>();
   final _controllerOrderId = TextEditingController();
   final _controllerCustomerId = TextEditingController();
@@ -28,14 +31,21 @@ class _AddRmaFormState extends State<AddRmaForm> {
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
-                controller: _controllerOrderId,
-                decoration: InputDecoration(
-                  label: Text('lable_order'.tr()),
+              Theme(
+                data: ThemeData(
+                  textTheme: TextTheme(
+                    bodyLarge: TextStyle(fontSize: 10),
+                  ),
                 ),
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-                validator: _idValidator,
+                child: TextFormField(
+                  controller: _controllerOrderId,
+                  decoration: InputDecoration(
+                    label: Text('lable_order'.tr()),
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                  validator: _idValidator,
+                ),
               ),
               TextFormField(
                 controller: _controllerCustomerId,
@@ -58,6 +68,27 @@ class _AddRmaFormState extends State<AddRmaForm> {
                 onPressed: _validateAndSaveForm,
                 child: const Text('create rma'),
               ),
+              Checkbox(
+                value: _checkBoxChecked,
+                onChanged: (value) => setState(() {
+                  _checkBoxChecked = !_checkBoxChecked;
+                }),
+              ),
+              DropdownButton(
+                value: _selectedDropdownItem,
+                items: List.generate(
+                  10,
+                  (index) => DropdownMenuItem(
+                    value: index,
+                    child: Text(
+                      index.toString(),
+                    ),
+                  ),
+                ),
+                onChanged: (value) => setState(() {
+                  _selectedDropdownItem = value ?? _selectedDropdownItem;
+                }),
+              ),
             ],
           ),
         ),
@@ -70,7 +101,9 @@ class _AddRmaFormState extends State<AddRmaForm> {
       return TranslationKeys.requiredError();
     }
 
-    if (int.tryParse(value ?? '') == null) {
+    '42'.isParsable();
+
+    if (value.isParsable()) {
       return 'Please enter a valid number here 0-9!';
     }
     return null;
@@ -84,8 +117,8 @@ class _AddRmaFormState extends State<AddRmaForm> {
       final customerId = _controllerCustomerId.text;
       final description = _controllerDescription.text;
 
-      int parsedOrderId = int.parse(orderId);
-      int parsedCustomerId = int.parse(customerId);
+      int parsedOrderId = orderId.parseToInt();
+      int parsedCustomerId = customerId.parseToInt();
 
       final createdRma = Rma(
         id: 1,
@@ -107,5 +140,23 @@ class _AddRmaFormState extends State<AddRmaForm> {
     _controllerCustomerId.dispose();
     _controllerOrderId.dispose();
     _formKey.currentState?.dispose();
+  }
+}
+
+extension TextThemeBold on TextTheme {
+  TextStyle? get bodyLargeBold => bodyLarge?.copyWith(fontWeight: FontWeight.bold);
+}
+
+extension NumberParsing on String? {
+  bool isParsable() {
+    return int.tryParse(this ?? '') != null;
+  }
+
+  int parseToInt() {
+    if (!isParsable()) {
+      throw Exception('CAN NOT BE PARSED');
+    }
+
+    return int.parse(this!);
   }
 }

@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/entities/rma.dart';
 import 'package:flutter_project/screens/add_rma_form.dart';
-import 'package:flutter_project/widgets/rma_list_item.dart';
+import 'package:flutter_project/widgets/widgets.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = ColorScheme.fromSeed(seedColor: Colors.deepOrange);
+    final colorScheme = ColorScheme.fromSeed(seedColor: Colors.greenAccent);
 
     return MaterialApp(
       title: 'Flutter Demo',
@@ -38,7 +38,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: colorScheme,
         useMaterial3: true,
-        appBarTheme: AppBarTheme(backgroundColor: colorScheme.inversePrimary),
+        appBarTheme: AppBarTheme(
+          backgroundColor: colorScheme.inversePrimary,
+        ),
       ),
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -86,6 +88,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+      ),
+      drawer: Container(
+        width: 400,
+        color: Colors.red,
       ),
       body: ListView.separated(
         itemCount: rmaList.length,
