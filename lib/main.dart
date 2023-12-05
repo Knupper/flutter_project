@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/add_customer_form.dart';
 import 'package:flutter_project/customer_list_item.dart';
 import 'package:flutter_project/entities/customer.dart';
 
@@ -11,12 +16,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = ColorScheme.fromSeed(seedColor: Colors.deepOrange);
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+        colorScheme: colorScheme,
         useMaterial3: true,
+        appBarTheme: AppBarTheme(backgroundColor: colorScheme.inversePrimary),
       ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.yellow,
+          brightness: Brightness.dark,
+        ),
+      ),
+      themeMode: ThemeMode.light,
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -32,26 +47,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final customerList = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
       body: ListView.separated(
-        itemCount: 1000,
+        itemCount: customerList.length,
         separatorBuilder: (context, index) => const SizedBox(height: 8),
         itemBuilder: (context, index) => CustomerListItem(
-          customer: Customer(
-            id: 0,
-            isCompany: index % 2 == 0,
-            firstName: 'Claudia',
-            lastName: 'Birke',
-            address: 'Hinter Mond 23, 22222 Mondland',
-            orderIds: [0, 1, 2, 3],
-          ),
+          customer: customerList[index],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final customer = await Navigator.push<Customer>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddCustomerForm(),
+            ),
+          );
+
+          if (customer == null) {
+            return;
+          }
+
+          setState(() {
+            customerList.add(customer);
+          });
+        },
+        tooltip: 'Add new customer',
+        child: const Icon(Icons.add_home_work_outlined),
       ),
     );
   }

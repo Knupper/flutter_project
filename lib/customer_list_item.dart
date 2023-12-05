@@ -14,6 +14,7 @@ class CustomerListItem extends StatelessWidget {
     return Tooltip(
       triggerMode: TooltipTriggerMode.longPress,
       message: 'Hier steht ein toller Tooltip',
+      waitDuration: const Duration(seconds: 1),
       child: ListTile(
         leading: Icon(
           customer.isCompany ? Icons.food_bank_rounded : Icons.person,
@@ -21,7 +22,6 @@ class CustomerListItem extends StatelessWidget {
         title: Text('${customer.lastName}, ${customer.firstName}'),
         subtitle: Text('Orders: ${customer.orderIds.length}'),
         onTap: () => debugPrint('navigate to detail'),
-        onLongPress: () => debugPrint('show context menu'),
       ),
     );
   }
