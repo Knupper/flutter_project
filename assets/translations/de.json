@@ -1,0 +1,5 @@
+{
+    "required_error": "Das Feld darf nicht leer sein",
+    "lable_order": "Auftragsnummer",
+    "lable_customer": "Kundennummer"
+}

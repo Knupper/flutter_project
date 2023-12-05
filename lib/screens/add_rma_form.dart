@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_project/entities/rma.dart';
+import 'package:flutter_project/util/translation_keys.dart';
 
 class AddRmaForm extends StatefulWidget {
   const AddRmaForm({super.key});
@@ -28,8 +30,8 @@ class _AddRmaFormState extends State<AddRmaForm> {
             children: [
               TextFormField(
                 controller: _controllerOrderId,
-                decoration: const InputDecoration(
-                  label: Text('OrderId'),
+                decoration: InputDecoration(
+                  label: Text('lable_order'.tr()),
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
@@ -37,8 +39,8 @@ class _AddRmaFormState extends State<AddRmaForm> {
               ),
               TextFormField(
                 controller: _controllerCustomerId,
-                decoration: const InputDecoration(
-                  label: Text('CustomerId'),
+                decoration: InputDecoration(
+                  label: Text(TranslationKeys().lableCustomer),
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
@@ -65,7 +67,7 @@ class _AddRmaFormState extends State<AddRmaForm> {
 
   String? _idValidator(String? value) {
     if (value?.isEmpty ?? true) {
-      return 'This field is required, please enter sth.';
+      return TranslationKeys.requiredError();
     }
 
     if (int.tryParse(value ?? '') == null) {

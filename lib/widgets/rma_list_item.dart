@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/entities/rma.dart';
+import 'package:intl/intl.dart';
 
 class RmaListItem extends StatelessWidget {
   const RmaListItem({
@@ -22,7 +24,7 @@ class RmaListItem extends StatelessWidget {
         ),
         title: Text('${rma.customerId}, ${rma.orderId}'),
         subtitle: Text(rma.description),
-        trailing: Text(rma.createdAt.toLocal().toString()),
+        trailing: Text(DateFormat.yMMMMd(context.locale.languageCode).format(rma.createdAt)),
         onTap: () => debugPrint('navigate to detail'),
       ),
     );
