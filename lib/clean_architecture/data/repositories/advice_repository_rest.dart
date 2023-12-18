@@ -1,27 +1,27 @@
-import 'dart:convert';
+import 'dart:io';
 
-import 'package:flutter_project/clean_architecture/data/dto/advice_dto.dart';
+import 'package:flutter_project/clean_architecture/core/failure.dart';
+import 'package:flutter_project/clean_architecture/data/data_sources/rest_api_data_source.dart';
+import 'package:flutter_project/clean_architecture/domain/entities/advice_entity.dart';
 import 'package:flutter_project/clean_architecture/domain/repositories/advice_repository.dart';
-import 'package:http/http.dart';
+import 'package:multiple_result/multiple_result.dart';
 
 class AdviceRepositoryRest implements AdviceRepository {
-  final Client client;
+  final RestApiDataSource dataSource;
 
-  AdviceRepositoryRest({required this.client});
+  AdviceRepositoryRest({required this.dataSource});
 
   @override
-  Future<AdviceDto> read({String id = ''}) async {
-    final result = await client.get(
-      Uri.parse('https://api.flutter-community.com/api/v1/advice/$id'),
-      headers: {
-        'accept': 'application/json',
-      },
-    );
+  Future<Result<AdviceEntity, Failure>> read({String id = ''}) async {
+    try {
+      final dto = await dataSource.read(id: id);
+      final entity = AdviceEntity(advice: dto.advice, id: dto.id);
 
-    if (result.statusCode != 200) {
-      // error handling
+      return Success(entity);
+    } on SocketException catch (_) {
+      return Error(TimeOutFailure());
+    } on Exception catch (_) {
+      return Error(ServerFailure());
     }
-
-    return AdviceDto.fromJson(jsonDecode(result.body));
   }
 }

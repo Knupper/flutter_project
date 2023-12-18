@@ -13,9 +13,9 @@ class AdviceStateLoading extends AdviceState {
 }
 
 class AdviceStateError extends AdviceState {
-  const AdviceStateError({required this.errorMessage});
+  const AdviceStateError({required this.failure});
 
-  final String errorMessage;
+  final Failure failure;
 }
 
 class AdviceStateLoaded extends AdviceState {

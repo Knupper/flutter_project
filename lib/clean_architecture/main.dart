@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_project/clean_architecture/data/data_sources/rest_api_data_source.dart';
 import 'package:flutter_project/clean_architecture/data/repositories/advice_repository_rest.dart';
 import 'package:flutter_project/clean_architecture/domain/repositories/advice_repository.dart';
 import 'package:flutter_project/clean_architecture/presentation/screens/my_home_screen.dart';
@@ -9,6 +10,8 @@ import 'package:http/http.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+
+  final dataSource = RestApiDataSource(client: Client());
 
   runApp(
     EasyLocalization(
@@ -23,7 +26,7 @@ Future<void> main() async {
       child: MultiRepositoryProvider(
         providers: [
           RepositoryProvider<AdviceRepository>(
-            create: (context) => AdviceRepositoryRest(client: Client()),
+            create: (context) => AdviceRepositoryRest(dataSource: dataSource),
           ),
         ],
         child: const MyApp(),
