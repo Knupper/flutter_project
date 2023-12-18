@@ -11,9 +11,7 @@ class AdviceUseCase {
   Future<Result<AdviceEntity, Failure>> read({String? id}) async {
     final int? parsedValue = int.tryParse(id ?? '');
 
-    if (parsedValue == null) {
-      return Error(InvalidIdFailure());
-    } else if (parsedValue > 90) {
+    if ((parsedValue ?? 0) > 90) {
       return Error(InvalidIdFailure());
     } else {
       final result = await repository.read(id: id ?? '');

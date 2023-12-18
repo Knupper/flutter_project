@@ -32,7 +32,7 @@ class AdvicePage extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                state.errorMessage,
+                state.failure.toString(),
               ),
             ),
           );

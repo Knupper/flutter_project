@@ -18,8 +18,6 @@ class AdviceCubit extends Cubit<AdviceState> {
       (success) => emit(AdviceStateLoaded(id: success.id, advice: success.advice)),
       (error) => emit(AdviceStateError(failure: error)),
     );
-
-    emit(AdviceStateError(failure: InvalidIdFailure()));
   }
 
   Future<void> fetch() async {
