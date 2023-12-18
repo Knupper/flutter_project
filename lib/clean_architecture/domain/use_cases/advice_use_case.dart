@@ -6,8 +6,8 @@ class AdviceUseCase {
 
   AdviceUseCase({required this.repository});
 
-  Future<AdviceEntity> read() async {
-    final result = await repository.read();
+  Future<AdviceEntity> read({String? id}) async {
+    final result = await repository.read(id: id ?? '');
 
     return AdviceEntity(advice: result.advice, id: result.id);
   }

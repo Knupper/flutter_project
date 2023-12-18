@@ -14,4 +14,11 @@ class AdviceCubit extends Cubit<AdviceState> {
 
     emit(AdviceStateLoaded(id: result.id, advice: result.advice));
   }
+
+  Future<void> fetch({required String id}) async {
+    emit(const AdviceStateLoading());
+    final result = await useCase.read(id: id);
+
+    emit(AdviceStateLoaded(id: result.id, advice: result.advice));
+  }
 }
