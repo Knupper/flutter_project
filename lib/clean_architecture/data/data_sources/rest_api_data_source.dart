@@ -12,22 +12,17 @@ class RestApiDataSource implements DataSource {
 
   @override
   Future<AdviceDto> read({String id = ''}) async {
-    try {
-      final result = await client.get(
-        Uri.parse('https://api.flutter-community.com/api/v1/advice/$id'),
-        headers: {
-          'accept': 'application/json',
-        },
-      );
+    final result = await client.get(
+      Uri.parse('https://api.flutter-community.com/api/v1/advice/$id'),
+      headers: {
+        'accept': 'application/json',
+      },
+    );
 
-      if (result.statusCode != 200) {
-        throw Exception('invalid response');
-      }
-
-      return AdviceDto.fromJson(jsonDecode(result.body));
-    } catch (e) {
-      debugPrint('Log error');
-      rethrow;
+    if (result.statusCode != 200) {
+      throw Exception('invalid response');
     }
+
+    return AdviceDto.fromJson(jsonDecode(result.body));
   }
 }

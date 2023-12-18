@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_project/clean_architecture/core/failure.dart';
 import 'package:flutter_project/clean_architecture/domain/use_cases/advice_use_case.dart';
