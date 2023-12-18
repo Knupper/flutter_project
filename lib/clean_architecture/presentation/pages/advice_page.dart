@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_project/clean_architecture/domain/repositories/advice_repository.dart';
+import 'package:flutter_project/clean_architecture/domain/use_cases/advice_use_case.dart';
 import 'package:flutter_project/clean_architecture/presentation/pages/cubit/advice_cubit.dart';
 
 class AdvicePageProvider extends StatelessWidget {
@@ -8,7 +10,9 @@ class AdvicePageProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AdviceCubit>(
-      create: (context) => AdviceCubit(),
+      create: (context) => AdviceCubit(
+        useCase: AdviceUseCase(repository: context.read<AdviceRepository>()),
+      ),
       child: const AdvicePage(),
     );
   }
@@ -23,7 +27,13 @@ class AdvicePage extends StatelessWidget {
       listenWhen: (previous, current) => current is AdviceStateError,
       listener: (context, state) {
         if (state is AdviceStateError) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                state.errorMessage,
+              ),
+            ),
+          );
         }
       },
       child: Column(
@@ -39,9 +49,9 @@ class AdvicePage extends StatelessWidget {
                     debugPrint('$state');
                     switch (state) {
                       case AdviceStateInitial _:
-                        return Text('Please press the button below.');
+                        return const Text('Please press the button below.');
                       case AdviceStateLoading _:
-                        return CircularProgressIndicator();
+                        return const CircularProgressIndicator();
                       case AdviceStateError error:
                         return Text(
                           error.errorMessage,
