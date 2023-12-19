@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_project/screens/add_customer_form.dart';
 import 'package:flutter_project/widgets/customer_list_item.dart';
