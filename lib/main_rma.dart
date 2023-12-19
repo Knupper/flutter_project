@@ -1,12 +1,22 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
 import 'package:flutter_project/entities/rma.dart';
 import 'package:flutter_project/screens/add_rma_form.dart';
 import 'package:flutter_project/widgets/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+
+  const storage = FlutterSecureStorage();
+
+  final elements = await storage.readAll();
+
+  debugPrint(jsonEncode(elements));
 
   runApp(
     EasyLocalization(
@@ -85,22 +95,48 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AdaptiveScaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      drawer: Container(
-        width: 400,
-        color: Colors.red,
+      destinations: const [
+        NavigationDestination(icon: Icon(Icons.abc_outlined), label: 'abc'),
+        NavigationDestination(icon: Icon(Icons.work), label: 'cde'),
+        NavigationDestination(icon: Icon(Icons.pageview), label: 'bcd'),
+      ],
+      onSelectedIndexChange: (index) => debugPrint('index: $index'),
+      useDrawer: true,
+      largeSecondaryBody: (context) => const Placeholder(),
+      body: (context) => Column(
+        children: [
+          Expanded(
+            child: ListView.separated(
+              itemCount: rmaList.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 8),
+              itemBuilder: (context, index) => RmaListItem(
+                rma: rmaList[index],
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Spacer(),
+              TextButton(
+                onPressed: () => debugPrint('prev'),
+                child: const Text('Previous'),
+              ),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () => debugPrint('nexz'),
+                child: const Text('next'),
+              ),
+              const Spacer(),
+            ],
+          )
+        ],
       ),
-      body: ListView.separated(
-        itemCount: rmaList.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 8),
-        itemBuilder: (context, index) => RmaListItem(
-          rma: rmaList[index],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
+      trailingNavRail: FloatingActionButton(
         onPressed: () async {
           final rma = await Navigator.push<Rma>(
             context,

@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_project/entities/rma.dart';
 import 'package:flutter_project/util/translation_keys.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AddRmaForm extends StatefulWidget {
   const AddRmaForm({super.key});
@@ -100,16 +103,10 @@ class _AddRmaFormState extends State<AddRmaForm> {
     if (value?.isEmpty ?? true) {
       return TranslationKeys.requiredError();
     }
-
-    '42'.isParsable();
-
-    if (value.isParsable()) {
-      return 'Please enter a valid number here 0-9!';
-    }
     return null;
   }
 
-  void _validateAndSaveForm() {
+  Future<void> _validateAndSaveForm() async {
     final isFormValid = _formKey.currentState?.validate() == true;
 
     if (isFormValid) {
@@ -129,7 +126,23 @@ class _AddRmaFormState extends State<AddRmaForm> {
         status: RmaStatus.created,
       );
 
-      Navigator.pop<Rma>(context, createdRma);
+      const secureStorage = FlutterSecureStorage();
+
+      // move to a bloc/cubit
+      await secureStorage.write(
+        key: parsedCustomerId.toString(),
+        value: description,
+      );
+
+      if (context.mounted) {
+        Navigator.pop<Rma>(context, createdRma);
+      }
+
+      secureStorage.readAll().then((elements) {
+        debugPrint(jsonEncode(elements));
+
+        Navigator.pop<Rma>(context, createdRma);
+      });
     }
   }
 

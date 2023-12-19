@@ -9,6 +9,7 @@ class AdviceCubit extends Cubit<AdviceState> {
   AdviceCubit({required this.useCase}) : super(const AdviceStateInitial());
 
   final AdviceUseCase useCase;
+
   String _id = '';
 
   Future<void> fetchRandom() async {

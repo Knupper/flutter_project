@@ -5,6 +5,7 @@ import 'package:flutter_project/clean_architecture/data/data_sources/rest_api_da
 import 'package:flutter_project/clean_architecture/data/repositories/advice_repository_rest.dart';
 import 'package:flutter_project/clean_architecture/domain/repositories/advice_repository.dart';
 import 'package:flutter_project/clean_architecture/presentation/screens/my_home_screen.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 
 Future<void> main() async {
@@ -25,6 +26,7 @@ Future<void> main() async {
       fallbackLocale: const Locale('en', 'US'),
       child: MultiRepositoryProvider(
         providers: [
+          RepositoryProvider<FlutterSecureStorage>(create: (context) => const FlutterSecureStorage()),
           RepositoryProvider<AdviceRepository>(
             create: (context) => AdviceRepositoryRest(dataSource: dataSource),
           ),
