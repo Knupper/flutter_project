@@ -5,7 +5,6 @@ import 'package:flutter_project/clean_architecture/domain/repositories/advice_re
 import 'package:flutter_project/clean_architecture/domain/use_cases/advice_use_case.dart';
 import 'package:flutter_project/clean_architecture/presentation/components/error_card.dart';
 import 'package:flutter_project/clean_architecture/presentation/pages/cubit/advice_cubit.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AdvicePageProvider extends StatelessWidget {
   const AdvicePageProvider({super.key});
@@ -14,7 +13,6 @@ class AdvicePageProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<AdviceCubit>(
       create: (context) => AdviceCubit(
-        secureStorage: RepositoryProvider.of<FlutterSecureStorage>(context),
         useCase: AdviceUseCase(repository: context.read<AdviceRepository>()),
       ),
       child: const AdvicePage(),

@@ -7,12 +7,36 @@ import 'package:flutter_project/entities/rma.dart';
 import 'package:flutter_project/screens/add_rma_form.dart';
 import 'package:flutter_project/widgets/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:sqlite3/sqlite3.dart' as sqlite;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
   const storage = FlutterSecureStorage();
+  final db = sqlite.sqlite3.openInMemory();
+
+  db.execute('''
+    CREATE TABLE artists (
+      id INTEGER NOT NULL PRIMARY KEY,
+      name TEXT NOT NULL
+    );
+  ''');
+
+  final stmt = db.prepare('INSERT INTO artists (name) VALUES (?)');
+  stmt
+    ..execute(['The Beatles'])
+    ..execute(['Led Zeppelin'])
+    ..execute(['The Who'])
+    ..execute(['Nirvana']);
+
+  stmt.dispose();
+
+  final sqlite.ResultSet resultSet = db.select('SELECT * FROM artists WHERE name LIKE ?', ['The %']);
+
+  for (final row in resultSet) {
+    debugPrint('Artist[id: ${row['id']}, name: ${row['name']}]');
+  }
 
   final elements = await storage.readAll();
 
